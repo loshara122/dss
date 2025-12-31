@@ -1,0 +1,973 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-image: linear-gradient(45deg, #141418,#0B0B0B);
+    overflow-x: hidden;
+}
+
+.header {
+    color:#fafafa;
+    text-align: center;
+    font-size: 128px;
+    font-weight: 500;
+    padding-top: 25px;
+}
+
+.desc {
+    color: #fafafa;
+    text-align: center;
+    padding-top: 25px;
+    font-weight: 300;
+    font-size: 40px;
+}
+
+.desc2 {
+    color: #fafafa;
+    padding-top: 25px;
+    font-weight: 300;
+    font-size: 48px;
+}
+
+.pageone {
+    background-image: url(/images/bgmain.png);
+    background-size: cover;
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    user-select: none;
+    justify-content: center;
+}
+
+.pagetwo {
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    gap: 250px;
+    padding-top: 100px;
+}
+
+.header2 {
+    color: #fafafa;
+    font-size: 96px;
+    padding-top: 50px;
+    font-weight: 300;
+}
+
+.pagethree {
+    height: 80vh;
+    justify-content: center;
+    display: flex;
+}
+
+.editor-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 20px;
+}
+
+.main-layout {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 30px;
+}
+
+.workspace {
+    width: 500px;
+    height: 500px;
+    border: 2px solid #c5a47e;
+    border-radius: 20px;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.3);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 360px;
+}
+
+.inventory {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 17px;
+}
+
+.item-slot {
+    width: 90px;
+    height: 90px;
+    border: 1px solid #c5a47e;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.02);
+    transition: 0.3s;
+    position: relative;
+}
+
+.item-slot:hover {
+    background: rgba(197, 164, 126, 0.1);
+}
+
+.item-slot img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.item-slot span {
+    font-size: 40px;
+    color: #c5a47e;
+    font-weight: 300;
+}
+
+.action-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 17px;
+    margin-top: 10px;
+    width: 412px;
+}
+
+.btn-ui {
+    background: transparent;
+    border: 1px solid #c5a47e;
+    color: #c5a47e;
+    padding: 15px 10px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: inherit;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.btn-ui:hover {
+    background: rgba(197, 164, 126, 0.1);
+}
+
+.ornament {
+    position: absolute;
+    cursor: move;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1/1;
+}
+
+.ornament.editing {
+    cursor: move;
+    position: relative;
+}
+
+.ornament.editing::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border: 2px dashed #c5a47e;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* Контейнер для изображения орнамента */
+.ornament-image-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Контейнер для кнопок управления ВНУТРИ орнамента */
+.ornament-controls-container {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 1001;
+}
+
+.ornament-controls-container .btn-control {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20, 20, 24, 0.9);
+    border: 1px solid #c5a47e;
+    color: #c5a47e;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Rosarivo', serif;
+}
+
+.ornament-controls-container .btn-control:hover {
+    transform: scale(1.1);
+}
+
+.ornament-controls-container .btn-control.btn-save:hover {
+    background: rgba(46, 125, 50, 0.9);
+    border-color: #4CAF50;
+    color: white;
+}
+
+.ornament-controls-container .btn-control.btn-delete:hover {
+    background: rgba(211, 47, 47, 0.9);
+    border-color: #f44336;
+    color: white;
+}
+
+.ornament-controls-container .btn-control i {
+    font-size: 12px;
+}
+
+/* Скрываем кнопки в плавающей панели при редактировании */
+.ornament-controls {
+    display: none !important;
+}
+
+/* Стили для фиксированного орнамента */
+.ornament.fixed { 
+    cursor: pointer; 
+    transition: transform 0.2s;
+}
+
+.ornament.fixed:hover {
+    transform: scale(1.05);
+    z-index: 20;
+}
+
+.ornament.fixed::after {
+    content: '✓';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #c5a47e;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 100;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Увеличиваем шарики для community tree */
+.community-tree .ornament {
+    width: 120px;
+    height: 120px;
+    z-index: 10;
+}
+
+.community-tree .ornament img {
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Адаптивность для кнопок управления */
+@media (max-width: 768px) {
+    .ornament-controls-container {
+        top: 3px;
+        right: 3px;
+    }
+    
+    .ornament-controls-container .btn-control {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .ornament-controls-container .btn-control i {
+        font-size: 10px;
+    }
+    
+    .community-tree .ornament.fixed::after {
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        top: 5px;
+        right: 5px;
+    }
+}
+
+.ornament img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.custom-ball {
+    border: 2px solid #c5a47e;
+    border-radius: 50%;
+}
+
+.moveable-control {
+    background: #fff !important;
+    border: 1px solid #c5a47e !important;
+}
+
+.moveable-line {
+    background: #c5a47e !important;
+}
+
+.page2img {
+    height: 750px;
+    width: 750px;
+}
+
+/* ===== НАВБАР ===== */
+.navbar {
+    background-color: #000000ac;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    font-family: 'Rosarivo', serif;
+    width: 100%;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+}
+
+.logo {
+    width: auto;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.logo-link {
+    display: inline-block;
+    text-decoration: none;
+    color: #c5a47e;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 0;
+    margin-right: 8px;
+    border-radius: 0;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.logo-link:hover {
+    background-color: transparent;
+    color: #ffb429;
+}
+
+.logo-link i {
+    font-size: 1.6rem;
+    display: none;
+}
+
+.nav-menu {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #c5a47e;
+    padding: 10px 18px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 1.2rem;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.nav-link:hover {
+    background-color: #de99102a;
+    color: #ffb429;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.nav-link i {
+    display: none;
+}
+
+.section-anchor {
+    scroll-margin-top: 80px;
+}
+
+.navbar,
+.navbar * {
+    font-family: 'Rosarivo', serif;
+}
+
+/* ===== COMMUNITY TREE ===== */
+.community-workspace {
+    width: 100%;
+    max-width: 1200px;
+    margin: 40px auto;
+    position: relative;
+}
+
+.community-tree {
+    width: 100%;
+    min-height: 800px;
+    border-radius: 12px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: contain;
+    position: relative;
+    overflow: visible;
+    aspect-ratio: 1.5/1.8;
+}
+
+.center { 
+    text-align: center; 
+}
+
+/* ===== ПЛАВАЮЩАЯ ПАНЕЛЬ ===== */
+.floating-panel {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    width: 300px;
+    background: rgba(20, 20, 24, 0.95);
+    border: 1px solid #c5a47e;
+    border-radius: 12px;
+    padding: 20px;
+    z-index: 1001;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    display: none;
+    font-family: 'Rosarivo', serif;
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.floating-panel.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #c5a47e;
+}
+
+.panel-header span {
+    color: #fafafa;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.close-panel-btn {
+    background: transparent;
+    border: none;
+    color: #c5a47e;
+    font-size: 24px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.close-panel-btn:hover {
+    background: rgba(197, 164, 126, 0.1);
+}
+
+.panel-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.btn-add-ornament {
+    background: transparent;
+    border: 2px dashed #c5a47e;
+    color: #c5a47e;
+    padding: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: inherit;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.btn-add-ornament:hover {
+    background: rgba(197, 164, 126, 0.1);
+    border-style: solid;
+}
+
+.btn-add-ornament span:first-child {
+    font-size: 24px;
+    font-weight: 300;
+}
+
+.panel-instruction {
+    color: #fafafa;
+    font-size: 14px;
+    text-align: center;
+    padding: 10px;
+    background: rgba(197, 164, 126, 0.05);
+    border-radius: 6px;
+    border: 1px solid rgba(197, 164, 126, 0.2);
+}
+
+.placement-message {
+    color: #fafafa;
+    font-size: 14px;
+    text-align: center;
+    padding: 10px;
+    background: rgba(197, 164, 126, 0.1);
+    border-radius: 6px;
+    border: 1px solid #c5a47e;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+.ornament-controls {
+    display: none !important;
+}
+
+.btn-control {
+    background: transparent;
+    border: 1px solid #c5a47e;
+    color: #c5a47e;
+    padding: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: inherit;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.btn-control.btn-save:hover {
+    background: rgba(46, 125, 50, 0.2);
+    border-color: #4CAF50;
+    color: #4CAF50;
+}
+
+.btn-control.btn-delete:hover {
+    background: rgba(211, 47, 47, 0.2);
+    border-color: #f44336;
+    color: #f44336;
+}
+
+.open-panel-btn {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background: rgba(20, 20, 24, 0.95);
+    border: 1px solid #c5a47e;
+    color: #c5a47e;
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: 'Rosarivo', serif;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.open-panel-btn:hover {
+    background: rgba(197, 164, 126, 0.1);
+    transform: translateY(-2px);
+}
+
+/* ===== СТИЛИ ДЛЯ ORNAMENT И УПРАВЛЕНИЯ ===== */
+.ornament-container {
+    position: absolute;
+    z-index: 1000;
+}
+
+.ornament-container.editing {
+    border: 2px dashed #c5a47e;
+    border-radius: 50%;
+    box-sizing: content-box;
+}
+
+.ornament-controls-container {
+    position: absolute;
+    left: 130px;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 1001;
+    background: rgba(20, 20, 24, 0.9);
+    border: 1px solid #c5a47e;
+    border-radius: 6px;
+    padding: 8px;
+    min-width: 100px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.ornament-controls-container .btn-control {
+    padding: 8px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid #c5a47e;
+    color: #c5a47e;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Rosarivo', serif;
+    gap: 5px;
+}
+
+.ornament-controls-container .btn-control:hover {
+    transform: translateY(-1px);
+}
+
+.ornament-controls-container .btn-control.btn-save:hover {
+    background: rgba(46, 125, 50, 0.2);
+    border-color: #4CAF50;
+    color: #4CAF50;
+}
+
+.ornament-controls-container .btn-control.btn-delete:hover {
+    background: rgba(211, 47, 47, 0.2);
+    border-color: #f44336;
+    color: #f44336;
+}
+
+.ornament-controls-container .btn-control i {
+    font-size: 12px;
+}
+
+/* Стили для орнамента */
+.ornament {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    cursor: move;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1/1;
+    transition: box-shadow 0.12s ease;
+}
+
+.ornament img { 
+    width:100%; 
+    height:100%; 
+    object-fit:cover; 
+    border-radius:50%; 
+}
+
+.ornament.selected { 
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 0 0 3px rgba(197,164,126,0.12) inset; 
+}
+
+.ornament.editing {
+    border: 2px dashed #c5a47e;
+    cursor: move;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.ornament.fixed { 
+    cursor: default; 
+    pointer-events: none; 
+    opacity: 0.95; 
+    box-shadow: 0 0 0 2px rgba(197,164,126,0.12) inset;
+    position: relative;
+}
+
+.ornament.fixed::after {
+    content: '✓';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #c5a47e;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 100;
+}
+
+/* Для крестика на шарике */
+.ornament .delete-btn {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 20px;
+    height: 20px;
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.ornament:hover .delete-btn {
+    opacity: 1;
+}
+
+/* Увеличиваем шарики для community tree */
+.community-tree .ornament {
+    width: 120px;
+    height: 120px;
+    z-index: 10;
+}
+
+.community-tree .ornament img {
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.community-tree .ornament.fixed {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.community-tree .ornament.fixed:hover {
+    transform: scale(1.05);
+    z-index: 20;
+}
+
+/*.community-tree .ornament.fixed::after {
+    content: '✓';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #c5a47e;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 100;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}*/
+
+/* ===== АДАПТИВНОСТЬ ===== */
+@media (max-width: 1024px) {
+    .main-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .workspace {
+        width: 400px;
+        height: 400px;
+    }
+    
+    .sidebar {
+        width: 400px;
+    }
+    
+    .header {
+        font-size: 96px;
+    }
+    
+    .desc {
+        font-size: 32px;
+    }
+    
+    .header2 {
+        font-size: 72px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        font-size: 64px;
+    }
+    
+    .desc {
+        font-size: 24px;
+    }
+    
+    .desc2 {
+        font-size: 32px;
+    }
+    
+    .header2 {
+        font-size: 48px;
+    }
+    
+    .workspace {
+        width: 320px;
+        height: 320px;
+    }
+    
+    .sidebar {
+        width: 320px;
+    }
+    
+    .inventory {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .action-buttons {
+        width: 320px;
+    }
+    
+    .pagetwo {
+        flex-direction: column;
+        gap: 50px;
+        padding-top: 50px;
+    }
+    
+    .page2img {
+        width: 100%;
+        height: auto;
+        max-width: 500px;
+    }
+    
+    .community-tree .ornament {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .community-tree .ornament.fixed::after {
+        width: 18px;
+        height: 18px;
+        font-size: 12px;
+        top: 4px;
+        right: 4px;
+    }
+    
+    .floating-panel {
+        width: 280px;
+        right: 10px;
+    }
+    
+    .open-panel-btn {
+        right: 10px;
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+    
+    .ornament-controls-container {
+        left: 110px;
+        min-width: 90px;
+        padding: 6px;
+    }
+    
+    .ornament-controls-container .btn-control {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+}
+
+/* Дополнительные утилиты */
+.panel-footer { 
+    margin-top: 6px; 
+    font-size: 14px; 
+    color: #c5a47e; 
+    text-align:center; 
+}
+
+.panel-timer { 
+    height:36px; 
+    display:flex; 
+    align-items:center; 
+    justify-content:center; 
+}
+
+.rotate-handle {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    color:#000;
+    border-radius: 50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    cursor: grab;
+    z-index: 1100;
+}
